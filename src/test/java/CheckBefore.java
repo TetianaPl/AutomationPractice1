@@ -1,6 +1,6 @@
 import org.testng.annotations.*;
 
-public class checkBefore {
+public class CheckBefore {
 
     @BeforeSuite //перед всеми тестовыми методами всех классов. Эта аннотация помечает точку входа при запуске
     public void checkBeforeSuite() {
@@ -51,13 +51,6 @@ public class checkBefore {
     public void checkAfterSuite() {
         System.out.println("@AfterSuite execution");
     }
-
-
-
-
-
-
-
 
     @Test
     public void Test1() {

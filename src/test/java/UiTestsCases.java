@@ -7,7 +7,7 @@ public class UiTestsCases {
     @Test
     public void verifyString() {
         //Прописала в переменной среды
-//        System.setProperty("webdriver.chrome.driver", "C:\\Drivers");
+//      System.setProperty("webdriver.chrome.driver", "C:\\Drivers");
         WebDriver chromeDriver = new ChromeDriver();
         chromeDriver.get("https://www.youtube.com/");
     }

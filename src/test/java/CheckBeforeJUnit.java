@@ -1,6 +1,6 @@
 import org.junit.*;
 
-public class checkBeforeJUnit {
+public class CheckBeforeJUnit {
 
     @BeforeClass //до создания экземпляра тест-класса
     public static void checkBeforeClass() {
