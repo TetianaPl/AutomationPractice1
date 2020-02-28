@@ -23,7 +23,7 @@ public class CheckArticlesTitles {
         chromeDriver.navigate().to(baseUrl);
         WebElement element = chromeDriver.findElement(By.xpath("//div[@id=\"orb-nav-links\"]//a[text()=\"News\"]"));
         element.click();
-        elements = chromeDriver.findElements(By.xpath("//div[@id=\"news-top-stories-container\"]//div[contains(@class,\"top-stories__secondary-item\")]/div[1]//a[contains(@class,\"gs-c-promo-heading\")]/h3"));
+        elements = chromeDriver.findElements(By.xpath("//div[contains(@class,\"top-stories__secondary-item\")]/div[1]//h3"));
     }
 
     @AfterTest
@@ -49,9 +49,16 @@ public class CheckArticlesTitles {
         };
     }
 
+    @DataProvider(name = "getArticleForSearchName")
+    public Object[] getArticleTitle() {
+        return new Object[]{
+                "World's End: World's End"
+        };
+    }
+
     @Test(priority = 1, dataProvider = "getHeadlineArticleName")
     public void checkHeadline(String controlHeadline) {
-        WebElement element = chromeDriver.findElement(By.xpath("//div[@id=\"news-top-stories-container\"]//div[@data-entityid=\"container-top-stories#1\"]/div[1]//a[contains(@class,\"gs-c-promo-heading\")]//h3[contains(@class,\"promo-heading__title\")]"));
+        WebElement element = chromeDriver.findElement(By.xpath("//div[@data-entityid=\"container-top-stories#1\"]/div[1]//h3[contains(@class,\"promo-heading__title\")]"));
         String headline = element.getText();
         Assert.assertEquals(headline, controlHeadline, "Test checks the headline article title on the page " + chromeDriver.getCurrentUrl() +
                 ".\nThe name of the headline article is \"" + headline + "\". It dismatchs to \"" + controlHeadline + "\".");
@@ -62,6 +69,21 @@ public class CheckArticlesTitles {
         String headline = element.getText();
         Assert.assertEquals(headline, controlHeadline, "Test checks the secondary articles titles on the page " + chromeDriver.getCurrentUrl() +
                 ".\nThe name of the article is \"" + headline + "\". It dismatchs to \"" + controlHeadline + ".\n");
+    }
+
+    @Test(priority = 3, dataProvider = "getArticleForSearchName")
+    public void checkSearch(String controlHeadline) {
+
+        WebElement element = chromeDriver.findElement(By.xpath("//div[@data-entityid=\"container-top-stories#1\"]/div[1]//a[@aria-label]/span"));
+        String wordRorSearch = element.getText();
+        element = chromeDriver.findElement(By.xpath("//input[@id=\"orb-search-q\"]"));
+        element.sendKeys(wordRorSearch);
+        element = chromeDriver.findElement(By.xpath("//button[@id=\"orb-search-button\"]"));
+        element.click();
+        element = chromeDriver.findElement(By.xpath("//li[@data-result-number=\"1\"]//h1"));
+        String firstTitle = element.getText();
+        Assert.assertEquals(firstTitle, controlHeadline, "Test checks the first article title in search results for \"" + wordRorSearch + "\" on the www.bbc.com/news." +
+                "\nThe name of the first article is \"" + firstTitle + "\". It dismatchs to \"" + controlHeadline + "\".");
     }
 
 }
