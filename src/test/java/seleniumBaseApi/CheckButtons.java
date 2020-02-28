@@ -8,8 +8,6 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.TimeUnit;
-
 public class CheckButtons {
     public WebDriver chromeDriver;
     public String baseUrl = "https://formy-project.herokuapp.com/buttons";
@@ -18,7 +16,6 @@ public class CheckButtons {
     public void launchBrowser() {
         chromeDriver = new ChromeDriver();
         chromeDriver.navigate().to(baseUrl);
-        chromeDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
     @AfterTest
