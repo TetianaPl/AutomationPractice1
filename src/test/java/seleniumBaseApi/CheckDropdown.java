@@ -53,10 +53,16 @@ public class CheckDropdown {
         WebElement element = chromeDriver.findElement(By.id("dropdownMenuButton"));
         element.click();
         element = chromeDriver.findElement(By.xpath("//div[@class=\"dropdown-menu show\"]/a[" + i + "]"));
+        String itemName = element.getText();
         element.click();
         chromeDriver.navigate().refresh();
-        Assert.assertTrue(chromeDriver.findElement(By.xpath("//h1[text()=\"" + pageVerification + "\"]")).isDisplayed(), "The headline \"" + pageVerification + "\" not found on the page " + chromeDriver.getCurrentUrl());
+        element = chromeDriver.findElement(By.tagName("h1"));
+        Assert.assertEquals(element.getText(), pageVerification, "Test checks the page that opened after the \"" + itemName + "\" item in the dropdown was selected on the page \"" + baseUrl +
+                "\".\nThe headline \"" + pageVerification + "\" not found on the page " + chromeDriver.getCurrentUrl());
+
+//        Assert.assertTrue(chromeDriver.findElement(By.xpath("//h1[text()=\"" + pageVerification + "\"]")).isDisplayed(), "The headline \"" + pageVerification + "\" not found on the page " + chromeDriver.getCurrentUrl());
     }
+
 
     @Test
     public void checkDropdownButtons() {
@@ -67,7 +73,8 @@ public class CheckDropdown {
         element.click();
         chromeDriver.navigate().refresh();
         List<WebElement> elements = chromeDriver.findElements(By.xpath("//button"));
-        Assert.assertTrue(elements.size() > 5, "There is only " + elements.size() + " buttons found on the page " + chromeDriver.getCurrentUrl());
+        Assert.assertTrue(elements.size() > 5, "Test checks the page that opens after the \"Buttons\" item in the dropdown was selected on the page " + baseUrl +
+                ".\nThere is only " + elements.size() + " buttons found on the page " + chromeDriver.getCurrentUrl());
     }
 
 }

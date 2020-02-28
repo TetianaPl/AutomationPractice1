@@ -34,18 +34,18 @@ public class CheckArticlesTitles {
     @DataProvider(name = "getHeadlineArticleName")
     public Object[] getHeadline() {
         return new Object[]{
-                "Air strike in Syria's Idlib kills 29 Turkish troops"
+                "Markets fall as virus spreads around the world"
         };
     }
 
     @DataProvider(name = "getSecondaryArticlesNames")
     public Object[][] getSecondaryArticleTitle() {
         return new Object[][]{
-                {elements.get(0), "Coronavirus outbreak at ‘decisive point’"},
-                {elements.get(1), "Dow falls more than 4% amid coronavirus stock rout"},
-                {elements.get(2), "Canada to stop paying Harry and Meghan's security"},
-                {elements.get(3), "Why your plane might land sideways in high wind"},
-                {elements.get(4), "Taylor Swift literally plays The Man in new video"}
+                {elements.get(0), "Attack in Syria kills 33 Turkish soldiers"},
+                {elements.get(1), "BP worker sacked over Hitler parody wins job back"},
+                {elements.get(2), "Eight-year ban for Chinese triple Olympic champion"},
+                {elements.get(3), "Searching for loved ones under the ashes"},
+                {elements.get(4), "Wine alert after woman dies from sip of MDMA drug"}
         };
     }
 
@@ -53,13 +53,15 @@ public class CheckArticlesTitles {
     public void checkHeadline(String controlHeadline) {
         WebElement element = chromeDriver.findElement(By.xpath("//div[@id=\"news-top-stories-container\"]//div[@data-entityid=\"container-top-stories#1\"]/div[1]//a[contains(@class,\"gs-c-promo-heading\")]//h3[contains(@class,\"promo-heading__title\")]"));
         String headline = element.getText();
-        Assert.assertEquals(headline, controlHeadline, "The name of the headline article is \"" + headline + "\". It dismatchs to \"" + controlHeadline + "\".");
+        Assert.assertEquals(headline, controlHeadline, "Test checks the headline article title on the page " + chromeDriver.getCurrentUrl() +
+                ".\nThe name of the headline article is \"" + headline + "\". It dismatchs to \"" + controlHeadline + "\".");
     }
 
     @Test(priority = 2, dataProvider = "getSecondaryArticlesNames")
     public void checkSecondaryTitles(WebElement element, String controlHeadline) {
         String headline = element.getText();
-        Assert.assertEquals(headline, controlHeadline, "The name of the article is \"" + headline + "\". It dismatchs to \"" + controlHeadline + ".\n");
+        Assert.assertEquals(headline, controlHeadline, "Test checks the secondary articles titles on the page " + chromeDriver.getCurrentUrl() +
+                ".\nThe name of the article is \"" + headline + "\". It dismatchs to \"" + controlHeadline + ".\n");
     }
 
 }
