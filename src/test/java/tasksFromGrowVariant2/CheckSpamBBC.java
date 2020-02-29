@@ -4,31 +4,38 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
+
 public class CheckSpamBBC {
 
     public WebDriver chromeDriver;
     public String baseUrl = "https://www.bbc.com";
     public String url;
+    public WebDriverWait wait;
 
     @BeforeTest
     public void launchBrowser() {
         chromeDriver = new ChromeDriver();
+        wait = new WebDriverWait(chromeDriver, 15);
         chromeDriver.navigate().to(baseUrl);
         WebElement element = chromeDriver.findElement(By.xpath("//div[@id=\"orb-nav-links\"]//a[text()=\"News\"]"));
         element.click();
-//        chromeDriver.navigate().to(chromeDriver.getCurrentUrl());
+        wait.until(stalenessOf(element));
         element = chromeDriver.findElement(By.xpath("//button[@class=\"nw-c-nav__wide-morebutton nw-c-nav__wide-morebutton__closed\"]"));
         element.click();
         element = chromeDriver.findElement(By.xpath("//li[contains(@class, \"nw-c-nav__wide-menuitem-container\")]//span[text()=\"Have Your Say\"]"));
         element.click();
+        wait.until(stalenessOf(element));
         element = chromeDriver.findElement(By.xpath("//h3[text()=\"How to share with BBC News\"]/.."));
         element.click();
+        wait.until(stalenessOf(element));
         url = chromeDriver.getCurrentUrl();
     }
 

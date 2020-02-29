@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -12,17 +13,22 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
+
 public class CheckArticlesTitles {
     public WebDriver chromeDriver;
     public String baseUrl = "https://www.bbc.com";
     public List<WebElement> elements;
+    public WebDriverWait wait;
 
     @BeforeTest
     public void launchBrowser() {
         chromeDriver = new ChromeDriver();
+        wait = new WebDriverWait(chromeDriver, 15);
         chromeDriver.navigate().to(baseUrl);
         WebElement element = chromeDriver.findElement(By.xpath("//div[@id=\"orb-nav-links\"]//a[text()=\"News\"]"));
         element.click();
+        wait.until(stalenessOf(element));
         elements = chromeDriver.findElements(By.xpath("//div[contains(@class,\"top-stories__secondary-item\")]/div[1]//h3"));
     }
 
@@ -80,6 +86,7 @@ public class CheckArticlesTitles {
         element.sendKeys(wordRorSearch);
         element = chromeDriver.findElement(By.xpath("//button[@id=\"orb-search-button\"]"));
         element.click();
+        wait.until(stalenessOf(element));
         element = chromeDriver.findElement(By.xpath("//li[@data-result-number=\"1\"]//h1"));
         String firstTitle = element.getText();
         Assert.assertEquals(firstTitle, controlHeadline, "Test checks the first article title in search results for \"" + wordRorSearch + "\" on the www.bbc.com/news." +
