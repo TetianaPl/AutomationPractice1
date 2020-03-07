@@ -6,42 +6,43 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
 
-public class CheckSpamBBC {
+public class CheckSendingMessageToBBC {
 
-    public WebDriver chromeDriver;
-    public String baseUrl = "https://www.bbc.com";
-    public String url;
-    public WebDriverWait wait;
+    private WebDriver chromeDriver;
+    private String baseUrl = "https://www.bbc.com";
+    private String howToShareUrl;
+    private WebDriverWait wait;
 
-    @BeforeTest
-    public void launchBrowser() {
+    @BeforeClass
+    public void launchBrowser_GoToPageWithContactForm() {
         chromeDriver = new ChromeDriver();
         wait = new WebDriverWait(chromeDriver, 15);
         chromeDriver.navigate().to(baseUrl);
-        WebElement element = chromeDriver.findElement(By.xpath("//div[@id=\"orb-nav-links\"]//a[text()=\"News\"]"));
-        element.click();
-        wait.until(stalenessOf(element));
-        element = chromeDriver.findElement(By.xpath("//button[@class=\"nw-c-nav__wide-morebutton nw-c-nav__wide-morebutton__closed\"]"));
-        element.click();
-        element = chromeDriver.findElement(By.xpath("//li[contains(@class, \"nw-c-nav__wide-menuitem-container\")]//span[text()=\"Have Your Say\"]"));
-        element.click();
-        wait.until(stalenessOf(element));
-        element = chromeDriver.findElement(By.xpath("//h3[text()=\"How to share with BBC News\"]/.."));
-        element.click();
-        wait.until(stalenessOf(element));
-        url = chromeDriver.getCurrentUrl();
+        WebElement newsMenuItem = chromeDriver.findElement(By.xpath("//div[@id='orb-nav-links']//a[text()='News']"));
+        newsMenuItem.click();
+        wait.until(stalenessOf(newsMenuItem));
+        chromeDriver.findElement(By.xpath("//button[@class='nw-c-nav__wide-morebutton nw-c-nav__wide-morebutton__closed']")).click();
+        WebElement haveYoySayButton = chromeDriver.findElement(By.xpath("//li[contains(@class, 'nw-c-nav__wide-menuitem-container')]//span[text()='Have Your Say']"));
+        haveYoySayButton.click();
+        wait.until(stalenessOf(haveYoySayButton));
+        WebElement howToShareLink = chromeDriver.findElement(By.xpath("//h3[text()='How to share with BBC News']/.."));
+        howToShareLink.click();
+        wait.until(stalenessOf(howToShareLink));
+        howToShareUrl = chromeDriver.getCurrentUrl();
     }
 
-    @AfterTest
+    @BeforeMethod
+    public void getToPageWithContactForm() {
+        chromeDriver.navigate().to(howToShareUrl);
+    }
+
+    @AfterClass
     public void terminateBrowser() {
-        chromeDriver.close();
+        chromeDriver.quit();
     }
 
     @DataProvider(name = "getValidDataForMailToBBC")
@@ -75,42 +76,30 @@ public class CheckSpamBBC {
 
     @Test(dataProvider = "getValidDataForMailToBBC")
     public void checkSendMailHappyPath(String name, String email, String town, String phone, String comment, String description) {
-        chromeDriver.navigate().to(url);
-        WebElement element = chromeDriver.findElement(By.id("fullName"));
-        element.sendKeys(name);
-        element = chromeDriver.findElement(By.id("email"));
-        element.sendKeys(email);
-        element = chromeDriver.findElement(By.id("town"));
-        element.sendKeys(town);
-        element = chromeDriver.findElement(By.id("phone"));
-        element.sendKeys(phone);
-        element = chromeDriver.findElement(By.id("message"));
-        element.sendKeys(comment);
-        element = chromeDriver.findElement(By.id("submit"));
-        String url = chromeDriver.getCurrentUrl();
-//        element.click();
-        Assert.assertNotEquals(url, chromeDriver.getCurrentUrl(), "Test checks sending the message to BBC " + description +
+
+        writeMessage(name, email, town, phone, comment);
+//        chromeDriver.findElement(By.id("submit")).click();
+
+        Assert.assertNotEquals(howToShareUrl, chromeDriver.getCurrentUrl(), "Test checks sending the message to BBC " + description +
                 ".\nThe url does not changed after submitting.");
     }
 
     @Test(dataProvider = "getInvalidDataForMailToBBC")
     public void checkSendMailUnhappyPath(String name, String email, String town, String phone, String comment, String description) {
-        chromeDriver.navigate().to(url);
-        WebElement element = chromeDriver.findElement(By.id("fullName"));
-        element.sendKeys(name);
-        element = chromeDriver.findElement(By.id("email"));
-        element.sendKeys(email);
-        element = chromeDriver.findElement(By.id("town"));
-        element.sendKeys(town);
-        element = chromeDriver.findElement(By.id("phone"));
-        element.sendKeys(phone);
-        element = chromeDriver.findElement(By.id("message"));
-        element.sendKeys(comment);
-        element = chromeDriver.findElement(By.id("submit"));
-        String url = chromeDriver.getCurrentUrl();
-        element.click();
-        Assert.assertEquals(url, chromeDriver.getCurrentUrl(), "Test checks sending the message to BBC with invalid data: " + description +
+
+        writeMessage(name, email, town, phone, comment);
+//        chromeDriver.findElement(By.id("submit")).click();
+
+        Assert.assertEquals(howToShareUrl, chromeDriver.getCurrentUrl(), "Test checks sending the message to BBC with invalid data: " + description +
                 ".\nThe data were confirmed!");
     }
 
+    public void writeMessage(String name, String email, String town, String phone, String comment) {
+
+        chromeDriver.findElement(By.id("fullName")).sendKeys(name);
+        chromeDriver.findElement(By.id("email")).sendKeys(email);
+        chromeDriver.findElement(By.id("town")).sendKeys(town);
+        chromeDriver.findElement(By.id("phone")).sendKeys(phone);
+        chromeDriver.findElement(By.id("message")).sendKeys(comment);
+    }
 }

@@ -6,31 +6,35 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.util.List;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.stalenessOf;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 public class CheckDropdown {
 
-    public WebDriver chromeDriver;
-    public String baseUrl = "https://formy-project.herokuapp.com/dropdown";
-    public WebDriverWait wait;
+    private WebDriver chromeDriver;
+    private String baseUrl = "https://formy-project.herokuapp.com/dropdown";
+    private WebDriverWait wait;
+    private WebElement dropdownButton, dropdownItem;
 
-    @BeforeTest
+    @BeforeClass
     public void launchBrowser() {
         chromeDriver = new ChromeDriver();
         wait = new WebDriverWait(chromeDriver, 15);
     }
 
-    @AfterTest
+    @BeforeMethod
+    public void NavigateToBaseUrl_ClickDropdown() {
+        chromeDriver.navigate().to(baseUrl);
+        dropdownButton = chromeDriver.findElement(By.id("dropdownMenuButton"));
+        dropdownButton.click();
+    }
+
+    @AfterClass
     public void terminateBrowser() {
-        chromeDriver.close();
+        chromeDriver.quit();
     }
 
     @DataProvider(name = "getValidationConditions")
@@ -54,34 +58,30 @@ public class CheckDropdown {
 
     @Test(dataProvider = "getValidationConditions")
     public void checkDropdown(int i, String pageVerification) {
-        chromeDriver.navigate().to(baseUrl);
-        WebElement element = chromeDriver.findElement(By.id("dropdownMenuButton"));
-        element.click();
-        element = chromeDriver.findElement(By.xpath("//div[@class=\"dropdown-menu show\"]/a[" + i + "]"));
-        String itemName = element.getText();
-        element.click();
-        wait.until(stalenessOf(element));
-//        wait.until(visibilityOfElementLocated(By.tagName("h1")));
-        element = chromeDriver.findElement(By.tagName("h1"));
-        Assert.assertEquals(element.getText(), pageVerification, "Test checks the page that opened after the \"" + itemName + "\" item in the dropdown was selected on the page \"" + baseUrl +
-                "\".\nThe headline \"" + pageVerification + "\" not found on the page " + chromeDriver.getCurrentUrl());
 
-//        Assert.assertTrue(chromeDriver.findElement(By.xpath("//h1[text()=\"" + pageVerification + "\"]")).isDisplayed(), "The headline \"" + pageVerification + "\" not found on the page " + chromeDriver.getCurrentUrl());
+        dropdownItem = chromeDriver.findElement(By.xpath("//div[@class='dropdown-menu show']/a[" + i + "]"));
+        String itemName = dropdownItem.getText();
+        dropdownItem.click();
+        wait.until(stalenessOf(dropdownItem));
+//        wait.until(visibilityOfElementLocated(By.tagName("h1")));
+
+        Assert.assertEquals(chromeDriver.findElement(By.tagName("h1")).getText(), pageVerification, "Test checks the page that opened after the '" + itemName + "' item in the dropdown was selected on the page '" + baseUrl +
+                "'.\nThe headline '" + pageVerification + "' not found on the page " + chromeDriver.getCurrentUrl());
     }
 
-
     @Test
-    public void checkDropdownButtons() {
-        chromeDriver.navigate().to(baseUrl);
-        WebElement element = chromeDriver.findElement(By.id("dropdownMenuButton"));
-        element.click();
-        element = chromeDriver.findElement(By.xpath("//div[@class=\"dropdown-menu show\"]/a[2]"));
-        element.click();
-        wait.until(stalenessOf(element));
+    public void checkSwitchToButtonsPage() {
+
+        dropdownItem = chromeDriver.findElement(By.xpath("//div[@class='dropdown-menu show']/a[2]"));
+        dropdownItem.click();
+        wait.until(stalenessOf(dropdownItem));
 //        wait.until(visibilityOfElementLocated(By.xpath("//button")));
-        List<WebElement> elements = chromeDriver.findElements(By.xpath("//button"));
-        Assert.assertTrue(elements.size() > 5, "Test checks the page that opens after the \"Buttons\" item in the dropdown was selected on the page " + baseUrl +
-                ".\nThere is only " + elements.size() + " buttons found on the page " + chromeDriver.getCurrentUrl());
+
+        List<WebElement> buttons = chromeDriver.findElements(By.xpath("//button"));
+
+        Assert.assertTrue(buttons.size() != 12,
+                "Test checks the page that opens after the 'Buttons' item in the dropdown was selected on the page " + baseUrl +
+                        ".\nThere are " + buttons.size() + " buttons found on the page " + chromeDriver.getCurrentUrl() + "instead 12.");
     }
 
 }
