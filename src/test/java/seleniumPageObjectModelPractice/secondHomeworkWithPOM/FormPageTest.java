@@ -24,14 +24,19 @@ public class FormPageTest extends FunctionalTest {
         formPage.setLastName("Ivanov");
         formPage.setJobTitle("Student");
         formPage.selectHighSchoolEducation();
+        formPage.selectHighSchoolEducation();
+        formPage.selectCollegeEducation();
         formPage.selectCollegeEducation();
         formPage.selectSchoolEducation();
+        formPage.selectSchoolEducation();
+        formPage.selectMaleSex();
         formPage.selectMaleSex();
         formPage.selectFemaleSex();
+        formPage.selectFemaleSex();
         formPage.selectUnknownSex();
-        formPage.setExperience(2);
-        formPage.setDateViaCalendar();
-        formPage.setDate("02/02/2020");
+        formPage.selectUnknownSex();
+        formPage.setExperience(1);
+        formPage.setDate("02/12/2020");
         formPage.clickSubmit();
 
         driver.navigate().refresh();

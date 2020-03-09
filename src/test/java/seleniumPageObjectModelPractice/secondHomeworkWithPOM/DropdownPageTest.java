@@ -149,9 +149,9 @@ public class DropdownPageTest extends FunctionalTest {
 
     @Test(priority = 15)
     public void checkPageAfterCompleteWebFormItemClicking() {
-        dropdownPage.clickDropdownItemCompleteWebForm();
-        driver.navigate().refresh();
-        Assert.assertEquals(driver.findElement(By.tagName("h1")).getText(), "Complete Web Form",
+        FormPage formPage = dropdownPage.clickDropdownItemCompleteWebForm();
+        assertTrue(formPage.isInitialized());
+        Assert.assertEquals(formPage.pageTitle(), "Complete Web Form",
                 "Test checks the page that opens after the 'Complete Web Form' dropdown item was selected" +
                         ".\nThe expected headline not found on the page " + driver.getCurrentUrl());
     }

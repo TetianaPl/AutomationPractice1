@@ -43,12 +43,6 @@ public class FormPage extends PageObject {
     @FindBy(id = "datepicker")
     private WebElement date;
 
-    @FindBy(xpath = "//div[@class='datepicker-days']")
-    private WebElement calendar;
-
-    @FindBy(xpath = "//div[@class='datepicker-days']/table[@class='table-condensed']/tbody/tr[2]/td[4]")
-    private WebElement day;
-
     @FindBy(xpath = "//a[text()='Submit']")
     private WebElement submitButton;
 
@@ -65,14 +59,17 @@ public class FormPage extends PageObject {
     }
 
     public void setFirstName(String userFirstName) {
+        firstName.clear();
         firstName.sendKeys(userFirstName);
     }
 
     public void setLastName(String userLastName) {
+        lastName.clear();
         lastName.sendKeys(userLastName);
     }
 
     public void setJobTitle(String userJobTitle) {
+        jobTitle.clear();
         jobTitle.sendKeys(userJobTitle);
     }
 
@@ -112,7 +109,6 @@ public class FormPage extends PageObject {
         sexUnknown.click();
     }
 
-
     public boolean isMaleSexSelected() {
         return sexMale.isSelected();
     }
@@ -126,19 +122,13 @@ public class FormPage extends PageObject {
     }
 
     public void setExperience(int userExperience) {
-        Select sel = new Select(experience);
-        sel.selectByIndex(userExperience);
+        Select item = new Select(experience);
+        item.selectByIndex(userExperience);
     }
 
     public void setDate(String userData) {
         date.clear();
         date.sendKeys(userData);
-    }
-
-    public void setDateViaCalendar() {
-        date.clear();
-        date.click();
-        day.click();
     }
 
     public PageObject clickSubmit() {

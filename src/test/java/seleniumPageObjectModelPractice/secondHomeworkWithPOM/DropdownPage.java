@@ -147,9 +147,9 @@ public class DropdownPage extends PageObject {
         return new PageObject(driver);
     }
 
-    public PageObject clickDropdownItemCompleteWebForm() {
+    public FormPage clickDropdownItemCompleteWebForm() {
         dropdownItemCompleteWebForm.click();
-        return new PageObject(driver);
+        return new FormPage(driver);
     }
 
 }
